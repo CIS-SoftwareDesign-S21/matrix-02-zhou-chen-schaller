@@ -23,6 +23,9 @@ mmult_omp.o:	mmult_omp.c
 mmult_omp_timing.o:	mmult_omp_timing.c
 	gcc -c -O3 mmult_omp_timing.c
 
+mmult_simd.o:	mmult_simd.c
+	gcc -c mmult_simd.c
+
 matrix_times_vector:	matrix_times_vector.c mat.c
 	mpicc -O3 -o matrix_times_vector matrix_times_vector.c mat.c
 
