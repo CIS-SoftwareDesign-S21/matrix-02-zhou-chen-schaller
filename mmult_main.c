@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     struct timespec end;
 	double *a, *b, *c; //*c1, *c2;
     int n;
-	double time;
+	double time = 0;
 	if(argc > 1)
 	{
 		// n = size of the square matrix
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 		clock_gettime (CLOCK_REALTIME , &end);
 		// calculate and print the time it took to calculate a*b
 		time = deltaTime(&start, &end);
-		printf("%d %f", n, time);
+		printf("%d %f\n", n, time);
 	}
 	else
 	{
