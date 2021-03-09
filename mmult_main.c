@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     struct timespec end;
 	double *a, *b, *c; //*c1, *c2;
     int n;
+	double time;
 	if(argc > 1)
 	{
 		// n = size of the square matrix
