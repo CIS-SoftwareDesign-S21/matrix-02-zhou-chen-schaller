@@ -12,6 +12,8 @@ int main(int argc, char *argv[])
 	double *a, *b, *c; //*c1, *c2;
     int n;
 	double time = 0;
+	FILE *fp;
+	
 	if(argc > 1)
 	{
 		// n = size of the square matrix
@@ -30,6 +32,12 @@ int main(int argc, char *argv[])
 		// calculate and print the time it took to calculate a*b
 		time = deltaTime(&start, &end);
 		printf("%d %f\n", n, time);
+		
+		
+        fp = fopen("m.txt", "a");
+        fprintf(fp, "%d %f\n", n, time);
+		
+        fclose(fp);
 	}
 	else
 	{
