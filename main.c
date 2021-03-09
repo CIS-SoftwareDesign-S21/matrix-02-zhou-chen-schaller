@@ -11,30 +11,30 @@
 #include "mat.h"
 
 int main(int argc, char* argv[]) {
+    
     struct timespec start;
     struct timespec end;
-    struct timespec res;
-    double *a, *b, *c1, *c2;
+    double *a, *b, *c;
     int n;
-    double times[2];
+    double time;
+
     if (argc > 1) {
+        // n = size of the square matrix
         n = atoi(argv[1]);
+        // gen matrix returns an n*n matrix
         a = gen_matrix(n, n);
         b = gen_matrix(n, n);
-        c1 = malloc(sizeof(double) * n * n);
-        c2 = malloc(sizeof(double) * n * n);
+        // allocate memory for the result matrix
+        c = malloc(sizeof(double) * n * n);
+        // start timer
         clock_gettime(CLOCK_REALTIME, &start);
-        mmult(c1, a, n, n, b, n, n);
+        // call mmult - this will multiple a*b and put the result in c
+        mmult(c, a, n, n, b, n, n);
+        //end timer
         clock_gettime(CLOCK_REALTIME, &end);
-        times[0] = deltaTime(&start, &end);
-        printf("%d %f", n, times[0]);
-        clock_gettime(CLOCK_REALTIME, &start);
-        mmult_omp(c2, a, n, n, b, n, n);
-        clock_gettime(CLOCK_REALTIME, &end);
-        times[1] = deltaTime(&start, &end);
-        printf(" %f", times[1]);
-        printf("\n");
-        compare_matrices(c1, c2, n, n);
+        // calculate and print the time it took to calculate a*b
+        time = deltaTime(&start, &end);
+        printf("%d %f", n, time);
     } else {
         fprintf(stderr, "Usage %s <n>\n", argv[0]);
     }
