@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     struct timespec end;
     double *a, *b, *c;
     int n;
-    double time;
+    double time = 0;
 
     if (argc > 1) {
         // n = size of the square matrix
@@ -35,6 +35,10 @@ int main(int argc, char* argv[]) {
         // calculate and print the time it took to calculate a*b
         time = deltaTime(&start, &end);
         printf("%d %f", n, time);
+        FILE *fp;
+        fp = fopen("m.txt", "a");
+        fprintf(fp, "%d %f\n", n, time);
+        fclose(fp);
     } else {
         fprintf(stderr, "Usage %s <n>\n", argv[0]);
     }
