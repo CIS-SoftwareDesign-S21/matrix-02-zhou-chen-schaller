@@ -15,38 +15,10 @@ int main(void)
 	double time = 0;
 	FILE *fp;
 	
-	/* file for mmult.c
-	 * Block off with comment block when not using
-	 */
-///*
-	fp = fopen("mmult.txt", "w");
+	fp = fopen("mmmult.txt", "w");
 	fclose(fp);
 	
-	fp = fopen("mmult.txt", "a");
-//*/
-	
-	
-	/* file for mmult_simd.c
-	 * Block off with comment block when not using
-	 */
-/*
-	fp = fopen("mmult_simd.txt", "w");
-	fclose(fp);
-	
-	fp = fopen("mmult_simd.txt", "a");
-*/
-	
-	
-	/* file for mmult_simd.c with -O3 flag
-	 * Block off with comment block when not using
-	 * Alter makefile as well
-	 */
-/*
-	fp = fopen("mmult_simd_O3.txt", "w");
-	fclose(fp);
-	
-	fp = fopen("mmult_simd_O3.txt", "a");
-*/
+	fp = fopen("mmmult.txt", "a");
 	
 	for(; n <= 3000; n += 500)
 	{
@@ -59,7 +31,6 @@ int main(void)
 		clock_gettime (CLOCK_REALTIME , &start);
 		// call mmult - this will multiply a*b and put the result in c
 		mmult(c, a, n, n, b, n, n);
-//		mmult_simd(c, a, n, n, b, n, n);
 		// end timer
 		clock_gettime (CLOCK_REALTIME , &end);
 		// calculate and print the time it took to calculate a*b

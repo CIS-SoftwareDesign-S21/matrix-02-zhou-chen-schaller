@@ -38,8 +38,8 @@ mxv_omp_mpi:	mxv_omp_mpi.c mat.c
 test_mmult:	test_mmult.c mmult.c mat.c
 	gcc test_mmult.c mmult.c mat.c -lm -o test_mmult
 	
-mmult_main: mmult_main.c mmult.c mat.c
-	gcc -o mmult_main mmult_main.c mat.c mmult.c -Wall -Werror
+mmult_main: mmult_main.c mmult.c mmult_simd.c mat.c
+	gcc -o mmult_main mmult_main.c mmult.c mmult_simd.c mat.c -Wall -Werror
 
 clean:
 	rm -f *.o
