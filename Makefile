@@ -25,6 +25,9 @@ mmult_omp_timing.o:	mmult_omp_timing.c
 
 mmult_simd.o:	mmult_simd.c
 	gcc -c mmult_simd.c
+	
+mmult_simd_O3.o:	mmult_simd_O3.c
+	gcc -c -O3 mmult_simd_O3.c
 
 matrix_times_vector:	matrix_times_vector.c mat.c
 	mpicc -O3 -o matrix_times_vector matrix_times_vector.c mat.c
@@ -38,8 +41,8 @@ mxv_omp_mpi:	mxv_omp_mpi.c mat.c
 test_mmult:	test_mmult.c mmult.c mat.c
 	gcc test_mmult.c mmult.c mat.c -lm -o test_mmult
 	
-mmult_main: mmult_main.c mmult.c mmult_simd.c mat.c
-	gcc -o mmult_main mmult_main.c mmult.c mmult_simd.c mat.c -Wall -Werror
+mmult_main: mmult_main.c mmult.o mmult_simd.o mmult_simd_O3.o mmult_omp.o mat.o
+	gcc -o mmult_main mmult_main.c mmult.o mmult_simd.o mmult_simd_O3.o mmult_omp.o mat.o -fopenmp -Wall -Werror
 
 clean:
 	rm -f *.o
