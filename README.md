@@ -35,7 +35,9 @@ Our solution also includes the mmult_mpi_omp program for multiplication using bo
 ```
 The program then writes the result to c.txt and verifies that the result is correct by using the single-threaded matrix multiplication algorithm on the two matrices and comparing the results.
 
-![Graph](graph.png)
+![Week 1 Graph](graph1.png)
+
+![Week 2 Graph](graph2.png)
 
 ## Teamwork
 We locked the master branch and pushed our work to branches so that we could review and approve each other's work before merging it into master. You can also find the contributions of each team member on our project board linked in the Project Life Cycle section.
