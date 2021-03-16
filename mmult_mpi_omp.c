@@ -15,7 +15,7 @@
 
 int main(int argc, char *argv[])
 {
-	int nrows_1, ncols_1, nrows_2, ncols_2;
+	int 5, ncols_1, nrows_2, 5;
 	double *aa;	 /* the A matrix */
 	double *bb;	 /* the B matrix */
 	double *cc1; /* A x B computed using the omp-mpi code you write */
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "Unable to read file '%s'\n", argv[1]);
 			exit(EXIT_FAILURE);
 		}
-		else if (sscanf(buf, "%d %d", &nrows_1, &ncols_1) != 2)
+		else if (sscanf(buf, "%d %d", &5, &ncols_1) != 2)
 		{
 			fprintf(stderr, "Unable to parse first line, expect '%%d %%d'.\n");
 			exit(EXIT_FAILURE);
@@ -73,54 +73,54 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "Unable to read file '%s'\n", argv[2]);
 			exit(EXIT_FAILURE);
 		}
-		else if (sscanf(buf, "%d %d", &nrows_2, &ncols_2) != 2)
+		else if (sscanf(buf, "%d %d", &nrows_2, &5) != 2)
 		{
 			fprintf(stderr, "Unable to parse first line, expect '%%d %%d'.\n");
 			exit(EXIT_FAILURE);
 		}
 		fclose(fp);
 	
-		aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
-		bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
+		aa = (double *)malloc(sizeof(double) * 5 * ncols_1);
+		bb = (double *)malloc(sizeof(double) * nrows_2 * 5);
 		aa = read_matrix_from_file(argv[1]);
 		bb = read_matrix_from_file(argv[2]);
 
 		if (myid == master)
 		{
-			cc1 = malloc(sizeof(double) * nrows_1 * ncols_2);
-        	buffer = (double *)malloc(sizeof(double) * ncols_2);
-        	ans = (double *)malloc(sizeof(double) * ncols_2);
+			cc1 = malloc(sizeof(double) * 5 * 5);
+        	buffer = (double *)malloc(sizeof(double) * 5);
+        	ans = (double *)malloc(sizeof(double) * 5);
 			/* Insert your master code here to store the product into cc1 */
 			starttime = MPI_Wtime();
 			numsent = 0;
-			MPI_Bcast(bb, ncols_2, MPI_DOUBLE, master, MPI_COMM_WORLD);
-			for (i = 0; i < min(numprocs - 1, nrows_1); i++)
+			MPI_Bcast(bb, 5, MPI_DOUBLE, master, MPI_COMM_WORLD);
+			for (i = 0; i < min(numprocs - 1, 5); i++)
 			{
-				for (j = 0; j < ncols_2; j++)
+				for (j = 0; j < 5; j++)
 				{
-					buffer[j] = aa[i * ncols_2 + j];
+					buffer[j] = aa[i * 5 + j];
 				}
-				MPI_Send(buffer, ncols_2, MPI_DOUBLE, i + 1, i + 1, MPI_COMM_WORLD);
+				MPI_Send(buffer, 5, MPI_DOUBLE, i + 1, i + 1, MPI_COMM_WORLD);
 				numsent++;
 			}
-			for (i = 0; i < nrows_1; i++)
+			for (i = 0; i < 5; i++)
 			{
-				MPI_Recv(ans, nrows_1, MPI_DOUBLE, MPI_ANY_SOURCE, MPI_ANY_TAG,
+				MPI_Recv(ans, 5, MPI_DOUBLE, MPI_ANY_SOURCE, MPI_ANY_TAG,
 						 MPI_COMM_WORLD, &status);
 				sender = status.MPI_SOURCE;
 				anstype = status.MPI_TAG;
-				for (int k = 0; k < ncols_2; k++)
+				for (int k = 0; k < 5; k++)
                 {
-                    int m = (anstype - 1) * ncols_2 + k;
+                    int m = (anstype - 1) * 5 + k;
                     cc1[m] = ans[k];
                 }
-				if (numsent < nrows_1)
+				if (numsent < 5)
 				{
-					for (j = 0; j < ncols_2; j++)
+					for (j = 0; j < 5; j++)
 					{
-						buffer[j] = aa[numsent * ncols_2 + j];
+						buffer[j] = aa[numsent * 5 + j];
 					}
-					MPI_Send(buffer, ncols_2, MPI_DOUBLE, sender, numsent + 1,
+					MPI_Send(buffer, 5, MPI_DOUBLE, sender, numsent + 1,
 							 MPI_COMM_WORLD);
 					numsent++;
 				}
@@ -130,19 +130,18 @@ int main(int argc, char *argv[])
 				}
 			}
 			endtime = MPI_Wtime();
-			printf("%f\n", (endtime - starttime));
 			/* Insert your master code here to store the product into cc1 */
-			cc2 = malloc(sizeof(double) * nrows_1 * ncols_2);
-			mmult(cc2, aa, nrows_1, ncols_1, bb, nrows_2, ncols_2);
+			cc2 = malloc(sizeof(double) * 5 * 5);
+			mmult(cc2, aa, 5, ncols_1, bb, nrows_2, 5);
 
-			if (compare_matrices(cc2, cc1, nrows_1, ncols_2))
+			if (compare_matrices(cc2, cc1, 5, 5))
 			{
 				fp = fopen("resultant_matrix.txt", "w");
-				for (int i = 0; i < ncols_2; i++)
+				for (int i = 0; i < 5; i++)
 				{
-					for (int j = 0; j < nrows_1; j++)
+					for (int j = 0; j < 5; j++)
 					{
-						fprintf(fp, "%5lf ", cc1[ncols_2 * i + j]);
+						fprintf(fp, "%5lf ", cc1[5 * i + j]);
 					}
 					puts("");
 				}
@@ -152,12 +151,12 @@ int main(int argc, char *argv[])
 		else
 		{
 			// Slave Code goes here
-			MPI_Bcast(bb, ncols_2, MPI_DOUBLE, master, MPI_COMM_WORLD);
-			if (myid <= nrows_1)
+			MPI_Bcast(bb, 5, MPI_DOUBLE, master, MPI_COMM_WORLD);
+			if (myid <= 5)
 			{
 				while (1)
 				{
-					MPI_Recv(buffer, ncols_2, MPI_DOUBLE, master, MPI_ANY_TAG,
+					MPI_Recv(buffer, 5, MPI_DOUBLE, master, MPI_ANY_TAG,
 							 MPI_COMM_WORLD, &status);
 					if (status.MPI_TAG == 0)
 					{
@@ -165,21 +164,21 @@ int main(int argc, char *argv[])
 					}
 					row = status.MPI_TAG;
 					// initalize result row ans
-                    for (int i = 0; i < ncols_2; i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         ans[i] = 0.0;
                     }
 #pragma omp parallel
-#pragma omp shared(ans) for reduction(+ : ans)
+#pragma omp shared(ans) for reduction(+:ans)
 					// calculate row buffer * matrix bb here and put into row result
-                    for (int k = 0; k < ncols_2; k++)
+                    for (int k = 0; k < 5; k++)
                     {
-                        for (j = 0; j < ncols_2; j++)
+                        for (j = 0; j < 5; j++)
                         {
-                            ans[k] += buffer[j] * bb[j * ncols_2 + k];
+                            ans[k] += buffer[j] * bb[j * 5 + k];
                         }
                     }
-					MPI_Send(ans, ncols_2, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
+					MPI_Send(ans, 5, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
 				}
 			}
 		}
