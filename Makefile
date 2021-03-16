@@ -1,4 +1,4 @@
-PGMS=mmult_omp_timing matrix_times_vector hello test_mmult mxv_omp_mpi mmult_mpi_omp
+PGMS=mmult_omp_timing matrix_times_vector hello test_mmult mxv_omp_mpi mmult_mpi_omp mmult_main
 
 all:	${PGMS}
 
@@ -23,6 +23,9 @@ mmult_omp.o:	mmult_omp.c
 mmult_omp_timing.o:	mmult_omp_timing.c
 	gcc -c -O3 mmult_omp_timing.c
 
+mmult_simd.o:	mmult_simd.c
+	gcc -c mmult_simd.c
+
 matrix_times_vector:	matrix_times_vector.c mat.c
 	mpicc -O3 -o matrix_times_vector matrix_times_vector.c mat.c
 
@@ -34,6 +37,9 @@ mxv_omp_mpi:	mxv_omp_mpi.c mat.c
 
 test_mmult:	test_mmult.c mmult.c mat.c
 	gcc test_mmult.c mmult.c mat.c -lm -o test_mmult
+	
+mmult_main: mmult_main.c mmult.c mmult_simd.c mat.c
+	gcc -o mmult_main mmult_main.c mmult.c mmult_simd.c mat.c -Wall -Werror
 
 clean:
 	rm -f *.o
