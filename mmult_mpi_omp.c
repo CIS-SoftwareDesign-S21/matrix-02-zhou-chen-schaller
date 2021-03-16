@@ -27,9 +27,7 @@ int main(int argc, char *argv[])
 	MPI_Status status;
 	int i, j, numsent, sender;
 	int anstype, row;
-
-	//aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
-	//bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
+	
 
 	/* insert other global variables here */
 	size_t buflen = 255;
@@ -61,7 +59,6 @@ int main(int argc, char *argv[])
 		}
 		fclose(fp);
 		
-		//printf("%d %d\n", nrows_1, ncols_1);
 
 		// 2nd matrix
 		fp = fopen(argv[2], "r");
@@ -82,8 +79,6 @@ int main(int argc, char *argv[])
 			exit(EXIT_FAILURE);
 		}
 		fclose(fp);
-		
-		printf("%d %d\n", nrows_2, ncols_2);
 		
 		aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
 		bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
