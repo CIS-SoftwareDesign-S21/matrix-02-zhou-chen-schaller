@@ -78,8 +78,8 @@ int main(int argc, char *argv[])
 		}
 		fclose(fp);
 
-		aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
-		bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
+		//aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
+		//bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
 		aa = read_matrix_from_file(argv[1]);
 		bb = read_matrix_from_file(argv[2]);
 		cc1 = (double *)malloc(sizeof(double) * nrows_1 * ncols_2);
@@ -130,64 +130,47 @@ int main(int argc, char *argv[])
 			}
 			endtime = MPI_Wtime();
 			/* Insert your master code here to store the product into cc1 */
-			mmult(cc2, aa, nrows_1, ncols_1, bb, nrows_2, ncols_2);
-
-			print_matrix(aa, nrows_1, ncols_1);
-			print_matrix(bb, nrows_2, ncols_2);
-
-			if (compare_matrices(cc2, cc1, nrows_1, ncols_2))
-			{
-				fp = fopen("resultant_matrix.txt", "w");
-				for (int i = 0; i < ncols_2; i++)
-				{
-					for (int j = 0; j < nrows_1; j++)
-					{
-						fprintf(fp, "%5lf ", cc1[ncols_2 * i + j]);
-					}
-					puts("");
-				}
-				fclose(fp);
-			}
-			else
-			{
-				// Slave Code goes here
-				MPI_Bcast(bb, ncols_2, MPI_DOUBLE, master, MPI_COMM_WORLD);
-				if (myid <= nrows_1)
-				{
-					while (1)
-					{
-						MPI_Recv(buffer, ncols_2, MPI_DOUBLE, master, MPI_ANY_TAG,
-								 MPI_COMM_WORLD, &status);
-						if (status.MPI_TAG == 0)
-						{
-							break;
-						}
-						row = status.MPI_TAG;
-						// initalize result row ans
-						for (int i = 0; i < ncols_2; i++)
-						{
-							ans[i] = 0.0;
-						}
-#pragma omp parallel
-#pragma omp shared(ans) for reduction(+ : ans)
-						// calculate row buffer * matrix bb here and put into row result
-						for (int k = 0; k < ncols_2; k++)
-						{
-							for (j = 0; j < ncols_2; j++)
-							{
-								ans[k] += buffer[j] * bb[j * ncols_2 + k];
-							}
-						}
-						MPI_Send(ans, ncols_2, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
-					}
-				}
-			}
 		}
 		else
 		{
-			fprintf(stderr, "Usage mmult_mpi_omp <file> <file>\n");
+			// Slave Code goes here
+			MPI_Bcast(bb, ncols_2, MPI_DOUBLE, master, MPI_COMM_WORLD);
+			if (myid <= nrows_1)
+			{
+				while (1)
+				{
+					MPI_Recv(buffer, ncols_2, MPI_DOUBLE, master, MPI_ANY_TAG,
+							 MPI_COMM_WORLD, &status);
+					if (status.MPI_TAG == 0)
+					{
+						break;
+					}
+					row = status.MPI_TAG;
+					// initalize result row ans
+					for (int i = 0; i < ncols_2; i++)
+					{
+						ans[i] = 0.0;
+					}
+#pragma omp parallel
+#pragma omp shared(ans) for reduction(+ \
+									  : ans)
+					// calculate row buffer * matrix bb here and put into row result
+					for (int k = 0; k < ncols_2; k++)
+					{
+						for (j = 0; j < ncols_2; j++)
+						{
+							ans[k] += buffer[j] * bb[j * ncols_2 + k];
+						}
+					}
+					MPI_Send(ans, ncols_2, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
+				}
+			}
 		}
-		MPI_Finalize();
-		return 0;
 	}
+	else
+	{
+		fprintf(stderr, "Usage mmult_mpi_omp <file> <file>\n");
+	}
+	MPI_Finalize();
+	return 0;
 }
