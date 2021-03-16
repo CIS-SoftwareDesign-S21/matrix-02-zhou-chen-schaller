@@ -78,8 +78,8 @@ int main(int argc, char *argv[])
 		}
 		fclose(fp);
 
-		//aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
-		//bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
+		aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
+		bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
 		aa = read_matrix_from_file(argv[1]);
 		bb = read_matrix_from_file(argv[2]);
 		cc1 = (double *)malloc(sizeof(double) * nrows_1 * ncols_2);
@@ -152,8 +152,7 @@ int main(int argc, char *argv[])
 						ans[i] = 0.0;
 					}
 #pragma omp parallel
-#pragma omp shared(ans) for reduction(+ \
-									  : ans)
+#pragma omp shared(ans) for reduction(+ : ans)
 					// calculate row buffer * matrix bb here and put into row result
 					for (int k = 0; k < ncols_2; k++)
 					{
