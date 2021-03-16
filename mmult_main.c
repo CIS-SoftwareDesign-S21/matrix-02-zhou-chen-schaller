@@ -12,64 +12,19 @@ int main(void)
 	double *a, *b, *c;
 	FILE *fp;
 	
-	int run1 = 1;
-	int choice;
-	
-	while(run1)
-	{
-		printf("\nDo you want to clear all mmult text files (if they exist)?\n"
-				"1 - yes\n"
-				"2 - no\n"
-				"> ");
-		if(scanf("%d", &choice) != 1)
-		{
-			printf("Error: failed to read integer.\n");
-			exit(0);
-		}
-		else
-		{
-			if(choice == 1)
-			{
-				fp = fopen("mmult.txt", "w");
-				fclose(fp);
-				
-				fp = fopen("mmult_simd.txt", "w");
-				fclose(fp);
-				
-				fp = fopen("mmult_simd_O3.txt", "w");
-				fclose(fp);
-				
-				fp = fopen("mmult_openMP.txt", "w");
-				fclose(fp);
-				
-				printf("Cleared!\n");
-				run1 = 0;
-			}
-			else if(choice == 2)
-			{
-				run1 = 0;
-				//break;
-			}
-			else
-			{
-				printf("Please select a valid choice!\n");
-			}
-		}
-	}
-	
-	int run2 = 1;
+	int run = 1;
 	int selection;
 	
-	while(run2)
+	while(run)
 	{
 		int n = 100;
 		double time = 0;
 		
 		printf("\nPlease select a matrix multiplication option: \n"
-				"1 - unoptimized (PLEASE ENSURE PROGRAM IS COMPILED W/O -O3 FLAG)\n"
-				"2 - SIMD (PLEASE ENSURE PROGRAM IS COMPILED W/O -O3 FLAG)\n"
-				"3 - SIMD w/ -O3 (PLEASE ENSURE PROGRAM IS COMPILED W/ -O3 FLAG)\n"
-				"4 - openMP (PLEASE ENSURE PROGRAM IS COMPILED W/O -O3 FLAG)\n"
+				"1 - unoptimized\n"
+				"2 - SIMD\n"
+				"3 - SIMD w/ -O3\n"
+				"4 - openMP\n"
 				"-1 - End the program\n"
 				"> ");
 		if(scanf("%d", &selection) != 1)
@@ -79,8 +34,13 @@ int main(void)
 		}
 		else
 		{
+			puts("");
+			
 			if(selection == 1)
 			{
+				fp = fopen("mmult.txt", "w");
+				fclose(fp);
+				
 				for(; n <= 1000; n += 100)
 				{
 					fp = fopen("mmult.txt", "a");
@@ -108,6 +68,9 @@ int main(void)
 			}
 			else if(selection == 2)
 			{
+				fp = fopen("mmult_simd.txt", "w");
+				fclose(fp);
+				
 				for(; n <= 1000; n += 100)
 				{
 					fp = fopen("mmult_simd.txt", "a");
@@ -135,6 +98,9 @@ int main(void)
 			}
 			else if(selection == 3)
 			{
+				fp = fopen("mmult_simd_O3.txt", "w");
+				fclose(fp);
+				
 				for(; n <= 1000; n += 100)
 				{
 					fp = fopen("mmult_simd_O3.txt", "a");
@@ -162,6 +128,9 @@ int main(void)
 			}
 			else if(selection == 4)
 			{
+				fp = fopen("mmult_openMP.txt", "w");
+				fclose(fp);
+				
 				for(; n <= 1000; n += 100)
 				{
 					fp = fopen("mmult_openMP.txt", "a");
@@ -189,9 +158,8 @@ int main(void)
 			}
 			else if(selection == -1)
 			{
-				run2 = 0;
+				run = 0;
 				printf("Ending program.\n");
-				//break;
 			}
 			else
 			{
