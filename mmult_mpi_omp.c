@@ -104,9 +104,9 @@ int main(int argc, char *argv[])
 						 MPI_COMM_WORLD, &status);
 				sender = status.MPI_SOURCE;
 				anstype = status.MPI_TAG;
-				for (int k = 0; k < ncols; k++)
+				for (int k = 0; k < ncols_2; k++)
                 {
-                    int m = (anstype - 1) * ncols + k;
+                    int m = (anstype - 1) * ncols_2 + k;
                     cc1[m] = ans[k];
                 }
 				if (numsent < nrows_1)
