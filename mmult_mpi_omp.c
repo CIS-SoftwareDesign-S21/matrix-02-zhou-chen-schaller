@@ -132,7 +132,24 @@ int main(int argc, char *argv[])
 			}
 			endtime = MPI_Wtime();
 			/* Insert your master code here to store the product into cc1 */
-		}
+			mmult(cc2, aa, nrows_1, ncols_1, bb, nrows_2, ncols_2);
+
+			print_matrix(aa, nrows_1, ncols_1);
+			print_matrix(bb, nrows_2, ncols_2);
+
+			if (compare_matrices(cc2, cc1, nrows_1, ncols_2))
+			{
+				fp = fopen("resultant_matrix.txt", "w");
+				for (int i = 0; i < ncols_2; i++)
+				{
+					for (int j = 0; j < nrows_1; j++)
+					{
+						fprintf(fp, "%5lf ", cc1[ncols_2 * i + j]);
+					}
+					puts("");
+				}
+				fclose(fp);
+			}
 		else
 		{
 			// Slave Code goes here
@@ -174,20 +191,4 @@ int main(int argc, char *argv[])
 	}
 	MPI_Finalize();
 	return 0;
-	
-	mmult(cc2, aa, nrows_1, ncols_1, bb, nrows_2, ncols_2);
-
-	if (compare_matrices(cc2, cc1, nrows_1, ncols_2))
-	{
-		fp = fopen("resultant_matrix.txt", "w");
-		for (int i = 0; i < ncols_2; i++)
-		{
-			for (int j = 0; j < nrows_1; j++)
-			{
-				fprintf(fp, "%5lf ", cc1[ncols_2 * i + j]);
-			}
-			puts("");
-		}
-		fclose(fp);
-	}
 }
