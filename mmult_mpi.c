@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
             endtime = MPI_Wtime();
             FILE* fp;
 			fp = fopen("mmult_mpi.txt", "a+");
-			fprintf(fp, "%d %f\n", atoi(argv[1]), (endtime -finaltime));
+			fprintf(fp, "%d %f\n", atoi(argv[1]), (endtime - starttime));
 			fclose(fp);
 			printf("\nsize: %d x %d\n", nrows, ncols);
         }
