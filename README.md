@@ -2,7 +2,6 @@
 matrix-02-zhou-chen-schaller created by GitHub Classroom
 
 ## Distributed Parallel Computing
-
 SIMD, OMP, and MPI are different types of parallel computing that utilize different methods in order to achieve parallel processing.
 
 ### What is SIMD?
@@ -15,16 +14,32 @@ OMP (OpenMP) is an API that supports multi-platform shared-memory multiprocessin
 MPI (Message Passing Interface) a standardized message-passing system used to communicate between several computers that are separate but linked, also referred to as a cluster. This implements the distributed memory type of parallel computing, and the standard defines the syntax and semantics for a set of API declarations, such as send, receive, broadcast for message-passing, as well as their expected behaviors. MPI was designed for high performance on massively parallel machines and on workstation clusters, and is widely available for free and in vendor-supplied implementations.
 
 ### Our Solution
-- SIMD functions by having each instruction perform the same operation on multiple vectors of data simultaneously in order to achieve parallel computing.
-- OpenMP utilizes symmetric multiprocessing, in which multiple processors share common memory as well as I/O resources via an API that supports the necessary level of multi-platform shared-memory multiprocessing programming.
-- MPI uses distributed memory, in which independent computers are linked via a high-speed network (or cluster), and information is shared via a standardized message-passing system.
-* Explain the architecture of your solution.
-* Explain the variations of algorithm you implemented.
+* TODO: add a part talking about with/without -O3 when running main (probably in paragraph below)
+* 
+We created four separate files (mmult, mmult_simd, mmult_omp, mmult_mpi) that define matrix multiplication functions using the different parallel computing approaches explained above. Our main program (`make mmult_main`) implements a basic user command-line interface for testing and timing the running times of these different algorithms when multiplying random matrices of sizes (100, 200, 300, ..., 1000). It generates tabular data from timing in a respective .txt file using the following format:
+```
+100 0.005419
+200 0.118126
+300 0.329821
+... ...
+1000 16.249184
+```
+The data from the five text files mmult.txt, mmult_simd.txt, mmult_simd_O3.txt, mmult_openMP.txt, and mmult_mpi.txt are used by the automated graphing script graph.gnu that is run via command-line with `gnuplot graph.gnu`, outputting a multi-line plot to graph.png.
+
+Our solution also includes the mmult_mpi_omp program for multiplication using both MPI to distribute the computation among nodes and OMP to distribute the computation among threads. The program, when run, takes two command line arguments as paths to .txt files holding two matrices to multiply. These text files should be in the following format:
+```
+5 5
+0.0 9.7 9.7 0.6 2.7
+3.1 8.7 5.2 7.7 0.6
+5.4 4.7 9.1 2.6 4.0
+4.5 0.1 7.9 4.7 3.2
+6.5 8.7 2.4 6.1 6.2
+```
+The program then writes the result to c.txt and verifies that the result is correct by using the single-threaded matrix multiplication algorithm on the two matrices and comparing the results.
 
 ![Graph](graph.png)
 
 ## Teamwork
-
 We locked the master branch and pushed our work to branches so that we could review and approve each other's work before merging it into master. You can also find the contributions of each team member on our project board linked in the Project Life Cycle section.
 
 ### Ricky Zhou
@@ -41,7 +56,7 @@ We locked the master branch and pushed our work to branches so that we could rev
   * Researched and wrote the section of the README explaining the differences between SIMD, OpenMP, and MPI
 * Week 2
   * Wrote code for MPI multiplication
-  * Modified mmult_mpi_omp.c to multiply matrices created from data from txt files provided via command line arguments, writing the resulting matrix to c.txt and verifying the result using single-threaded multiplication
+  * Modified mmult_mpi_omp.c to multiply matrices using both MPI to distribute the computation among nodes and OMP to distribute the computation among threads
 
 ### Karl Schaller
 * Week 1
@@ -55,12 +70,17 @@ We locked the master branch and pushed our work to branches so that we could rev
   * Completed all writing in README (excluding additional tasks)
 
 ## Full Project Life Cycle
-
 We used a [Trello Board](https://trello.com/b/20iU4Cqc/02-zhou-chen-schaller) to plan and manage our project and teamwork throughout the project life cycle. At the beginning of each week, we planned out the tasks we needed to accomplish, using checklists to break down the more complicated tasks and allocating tasks among team members.
 
-* Is the usual cycle: write code, compile code,  run code, test code was the same when doing remote development on Wolfgand cluster. Did you need to adapt your way of working or use different tools?
-* What kind of testing did you plan to use for this project? Did you consider measuring speed, memory consumption and validity of results for matrix multiplication. Did you consider that the code provided by the professor could have flaws?
-* Did you need to write code or use tools to generate random matrix of specific sizes? Did you put this in your plan? 
-* Did you put in your plan the work needed to generate tables or graphs? Did you automate this work?  
-* What proportion of the tasks (and time) in your plan is  about writing variations on the matrix multiplication algorithm and what proportion is about testing and reporting activities?
-* Include all tables, graphs and explanations needed to understand your work in the README.md file. No new or supplemental information should need to be communicated during the demo to grade your work.  
+Our general development cycle was to write code locally, and then upload it to the Wolfgang cluster to compile, run, and test, committing changes after ensuring that they ran correctly on the cluster by testing manually. We ensured the validity of our multiplication algorithms by comparing the results they produced with the results of the unoptimized single-threaded multiplication. The program that multiplies matrix data from two .txt files and writes the resulitng matrix in c.txt helped us manually check this. Our main program data collection combined with the graph visualization also acted as additional confirmation for our algorithms (we would expect each line to look like quadratic complexity, and we would expect our newer and more effective algorithms like MPI to perform significantly better).
+
+To generate the random matrices, we used the gen_matrix(n, m) function provided in mat.h.
+
+In the end, our team likely spent around 2/3 of its time writing code for the matrix multiplication algorithms and 1/3 of its time running, testing, and reporting.
+
+What kind of testing did you plan to use for this project? Did you consider measuring speed, memory consumption and validity of results for matrix multiplication. Did you consider that the code provided by the professor could have flaws?
+    Did you need to write code or use tools to generate random matrix of specific sizes? Did you put this in your plan? 
+    Did you put in your plan the work needed to generate tables or graphs? Did you automate this work?  
+    What proportion of the tasks (and time) in your plan is  about writing variations on the matrix multiplication algorithm and what proportion is about testing and reporting activities?
+
+* Include all tables, graphs and explanations needed to understand your work in the README.md file. No new or supplemental information should need to be communicated during the demo to grade your work.
