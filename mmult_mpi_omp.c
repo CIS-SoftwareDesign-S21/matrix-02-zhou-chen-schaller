@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
 			starttime = MPI_Wtime();
 			numsent = 0;
 			MPI_Bcast(bb, ncols_2, MPI_DOUBLE, master, MPI_COMM_WORLD);
+			MPI_Bcast(aa, ncols_2, MPI_DOUBLE, master, MPI_COMM_WORLD);
 			for (i = 0; i < min(numprocs - 1, nrows_1); i++)
 			{
 				for (j = 0; j < ncols_2; j++)
@@ -157,6 +158,7 @@ int main(int argc, char *argv[])
 		{
 			// Slave Code goes here
 			MPI_Bcast(bb, ncols_2, MPI_DOUBLE, master, MPI_COMM_WORLD);
+			MPI_Bcast(aa, ncols_2, MPI_DOUBLE, master, MPI_COMM_WORLD);
 			if (myid <= nrows_1)
 			{
 				while (1)
@@ -175,12 +177,13 @@ int main(int argc, char *argv[])
                     }
 #pragma omp parallel
 #pragma omp shared(ans) for reduction(+:ans)
+					int i = row - 1;
 					// calculate row buffer * matrix bb here and put into row result
                     for (int k = 0; k < ncols_2; k++)
                     {
-                        for (j = 0; j < ncols_2; j++)
+                        for (j = 0; j < nrows_1; j++)
                         {
-                            ans[k] += buffer[j] * bb[k * ncols_2 + j];
+                            ans[k] += aa[i * ncols_2 + j] * bb[j * ncols_2 + k];
                         }
                     }
 					MPI_Send(ans, ncols_2, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
