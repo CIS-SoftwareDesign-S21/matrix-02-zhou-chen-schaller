@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
 		}
 		fclose(fp);
 	
-		//aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
-		//bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
+		aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
+		bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
 		aa = read_matrix_from_file(argv[1]);
 		bb = read_matrix_from_file(argv[2]);
 		cc1 = (double *)malloc(sizeof(double) * nrows_1 * ncols_2);
@@ -132,21 +132,6 @@ int main(int argc, char *argv[])
 			}
 			endtime = MPI_Wtime();
 			/* Insert your master code here to store the product into cc1 */
-			mmult(cc2, aa, nrows_1, ncols_1, bb, nrows_2, ncols_2);
-
-			if (compare_matrices(cc2, cc1, nrows_1, ncols_2))
-			{
-				fp = fopen("resultant_matrix.txt", "w");
-				for (int i = 0; i < ncols_2; i++)
-				{
-					for (int j = 0; j < nrows_1; j++)
-					{
-						fprintf(fp, "%5lf ", cc1[ncols_2 * i + j]);
-					}
-					puts("");
-				}
-				fclose(fp);
-			}
 		}
 		else
 		{
@@ -189,4 +174,20 @@ int main(int argc, char *argv[])
 	}
 	MPI_Finalize();
 	return 0;
+	
+	mmult(cc2, aa, nrows_1, ncols_1, bb, nrows_2, ncols_2);
+
+	if (compare_matrices(cc2, cc1, nrows_1, ncols_2))
+	{
+		fp = fopen("resultant_matrix.txt", "w");
+		for (int i = 0; i < ncols_2; i++)
+		{
+			for (int j = 0; j < nrows_1; j++)
+			{
+				fprintf(fp, "%5lf ", cc1[ncols_2 * i + j]);
+			}
+			puts("");
+		}
+		fclose(fp);
+	}
 }
