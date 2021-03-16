@@ -16,8 +16,7 @@ int main(int argc, char *argv[])
     int nrows, ncols;
 
     double *aa, *b, *c;
-    double *buffer;
-    double *ans;
+    double *buffer, ans;
     double *times;
     double total_times;
 
