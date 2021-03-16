@@ -79,12 +79,11 @@ int main(int argc, char *argv[])
 			exit(EXIT_FAILURE);
 		}
 		fclose(fp);
-		
-		aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
-		bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
-
+	
 		if (myid == master)
 		{
+			aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
+			bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
 			aa = read_matrix_from_file(argv[1]);
 			bb = read_matrix_from_file(argv[2]);
 			cc1 = malloc(sizeof(double) * nrows_1 * ncols_2);
@@ -164,21 +163,15 @@ int main(int argc, char *argv[])
 						break;
 					}
 					row = status.MPI_TAG;
-					// initalize result row ans
-                    for (int i = 0; i < ncols_2; i++)
+					for (int i = 0; i < ncols_2; i++)
                     {
                         ans[i] = 0.0;
                     }
 #pragma omp parallel
-#pragma omp shared(ans) for reduction(+ : ans)
-					// calculate row buffer * matrix bb here and put into row result
-                    for (int k = 0; k < ncols_2; k++)
-                    {
-                        for (j = 0; j < ncols_2; j++)
-                        {
-                            ans[k] += buffer[j] * bb[j * ncols_2 + k];
-                        }
-                    }
+#pragma omp shared(ans) for reduction(+:ans)
+	                for (j = 0; j < ncols; j++) {
+	                    ans += buffer[j] * bb[j * ncols_2 + k];
+	                }
 					MPI_Send(ans, ncols_2, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
 				}
 			}
