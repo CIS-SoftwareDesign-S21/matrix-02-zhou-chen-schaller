@@ -16,8 +16,8 @@
 int main(int argc, char *argv[])
 {
 	int nrows_1, ncols_1, nrows_2, ncols_2;
-	double **aa;	 /* the A matrix */
-	double **bb;	 /* the B matrix */
+	double *aa;	 /* the A matrix */
+	double *bb;	 /* the B matrix */
 	double *cc1; /* A x B computed using the omp-mpi code you write */
 	double *cc2; /* A x B computed using the conventional algorithm */
 	double *buffer;
@@ -82,8 +82,8 @@ int main(int argc, char *argv[])
 	
 		aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
 		bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
-		aa = read_matrix_from_file(argv[1]);
-		bb = read_matrix_from_file(argv[2]);
+		aa = *read_matrix_from_file(argv[1]);
+		bb = *read_matrix_from_file(argv[2]);
 		cc1 = (double *)malloc(sizeof(double) * nrows_1 * ncols_2);
 		cc2 = (double *)malloc(sizeof(double) * nrows_1 * ncols_2);
 		buffer = (double *)malloc(sizeof(double) * ncols_2);
