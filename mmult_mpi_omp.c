@@ -15,7 +15,7 @@
 
 int main(int argc, char* argv[])
 {
-    int nrows, ncols;
+    int nrows_1, ncols_1, nrows_2, ncols_2;
     double *aa;	/* the A matrix */
     double *bb;	/* the B matrix */
     double *cc1;	/* A x B computed using the omp-mpi code you write */
@@ -25,31 +25,72 @@ int main(int argc, char* argv[])
     MPI_Status status;
 
     /* insert other global variables here */
+	size_t buflen = 255;
+	char buf[buflen];
+	FILE *fp;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
-    if (argc > 1) {
-        nrows = atoi(argv[1]);
-        ncols = nrows;
+    if (argc > 1) 
+	{
+		// 1st matrix
+		fp = fopen(argv[1], "r");
+		if(fp == NULL) {
+			fprintf(stderr, "Unable to open file '%s'\n", argv[1]);
+			exit(EXIT_FAILURE);
+		}
+		// Read size of matrix 1
+		if(!fgets(buf, buflen, fp)) {
+			fprintf(stderr, "Unable to read file '%s'\n", argv[1]);
+			exit(EXIT_FAILURE);
+		} else if(sscanf(buf, "%d %d", &nrows_1, &ncols_1) != 2) {
+			fprintf(stderr, "Unable to parse first line, expect '%%d %%d'.\n");
+			exit(EXIT_FAILURE);
+		}
+		fclose(fp);
+		
+		
+		// 2nd matrix
+		fp = fopen(argv[2], "r");
+		if(fp == NULL) {
+			fprintf(stderr, "Unable to open file '%s'\n", argv[2]);
+			exit(EXIT_FAILURE);
+		}
+		// Read size of matrix 2
+		if(!fgets(buf, buflen, fp)) {
+			fprintf(stderr, "Unable to read file '%s'\n", argv[2]);
+			exit(EXIT_FAILURE);
+		} else if(sscanf(buf, "%d %d", &nrows_2, &ncols_2) != 2) {
+			fprintf(stderr, "Unable to parse first line, expect '%%d %%d'.\n");
+			exit(EXIT_FAILURE);
+		}
+		fclose(fp);
+		
         
-        if (myid == 0) {
+        if (myid == 0) 
+		{
             // Master Code goes here
-            aa = gen_matrix(nrows, ncols);
-            bb = gen_matrix(ncols, nrows);
-            cc1 = malloc(sizeof(double) * nrows * nrows); 
+			aa = read_matrix_from_file(argv[1]);
+			bb = read_matrix_from_file(argv[2]);
+            cc1 = malloc(sizeof(double) * nrows_1 * ncols_2);
             starttime = MPI_Wtime();
             /* Insert your master code here to store the product into cc1 */
             endtime = MPI_Wtime();
             printf("%f\n",(endtime - starttime));
-            cc2  = malloc(sizeof(double) * nrows * nrows);
-            mmult(cc2, aa, nrows, ncols, bb, ncols, nrows);
-            compare_matrices(cc2, cc1, nrows, nrows);
-        } else {
+            cc2  = malloc(sizeof(double) * nrows_1 * ncols_2);
+            mmult(cc2, aa, nrows_1, ncols_1, bb, nrows_2, ncols_2);
+            if(compare_matrices(cc2, cc1, nrows_1, ncols_2))
+			{
+				fp = fopen("")
+			}
+        }
+		else 
+		{
             // Slave Code goes here
         }
     } else {
-        fprintf(stderr, "Usage matrix_times_vector <size>\n");
+        fprintf(stderr, "Usage mmult_mpi_omp <file> <file>\n");
     }
     MPI_Finalize();
     return 0;

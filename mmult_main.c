@@ -51,11 +51,11 @@ int main(void)
 					// allocate memory for the result matrix
 					c = malloc(sizeof(double) * n * n);
 					// start timer
-					clock_gettime(CLOCK_REALTIME , &start);
+					clock_gettime(CLOCK_REALTIME, &start);
 					// call mmult - this will multiply a*b and put the result in c
 					mmult(c, a, n, n, b, n, n);
 					// end timer
-					clock_gettime(CLOCK_REALTIME , &end);
+					clock_gettime(CLOCK_REALTIME, &end);
 					// calculate and print the time it took to calculate a*b
 					time = deltaTime(&start, &end);
 					printf("%d %f\n", n, time);
@@ -81,11 +81,11 @@ int main(void)
 					// allocate memory for the result matrix
 					c = malloc(sizeof(double) * n * n);
 					// start timer
-					clock_gettime(CLOCK_REALTIME , &start);
+					clock_gettime(CLOCK_REALTIME, &start);
 					// call mmult_simd
 					mmult_simd(c, a, n, n, b, n, n);
 					// end timer
-					clock_gettime(CLOCK_REALTIME , &end);
+					clock_gettime(CLOCK_REALTIME, &end);
 					// calculate and print the time it took to calculate a*b
 					time = deltaTime(&start, &end);
 					printf("%d %f\n", n, time);
@@ -111,11 +111,11 @@ int main(void)
 					// allocate memory for the result matrix
 					c = malloc(sizeof(double) * n * n);
 					// start timer
-					clock_gettime(CLOCK_REALTIME , &start);
+					clock_gettime(CLOCK_REALTIME, &start);
 					// call mmult_simd_O3
 					mmult_simd_O3(c, a, n, n, b, n, n);
 					// end timer
-					clock_gettime(CLOCK_REALTIME , &end);
+					clock_gettime(CLOCK_REALTIME, &end);
 					// calculate and print the time it took to calculate a*b
 					time = deltaTime(&start, &end);
 					printf("%d %f\n", n, time);
@@ -141,11 +141,11 @@ int main(void)
 					// allocate memory for the result matrix
 					c = malloc(sizeof(double) * n * n);
 					// start timer
-					clock_gettime (CLOCK_REALTIME , &start);
+					clock_gettime (CLOCK_REALTIME, &start);
 					// call mmult_omp
 					mmult_omp(c, a, n, n, b, n, n);
 					// end timer
-					clock_gettime(CLOCK_REALTIME , &end);
+					clock_gettime(CLOCK_REALTIME, &end);
 					// calculate and print the time it took to calculate a*b
 					time = deltaTime(&start, &end);
 					printf("%d %f\n", n, time);
