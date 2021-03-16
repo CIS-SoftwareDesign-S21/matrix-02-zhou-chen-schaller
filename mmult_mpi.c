@@ -49,9 +49,6 @@ int main(int argc, char *argv[])
         buffer = (double *)malloc(sizeof(double) * ncols);
         ans = (double *)malloc(sizeof(double) * ncols); // allocate space for return row
         master = 0;
-
-		printf("row 1: %d\n", nrows);
-
         if (myid == master)
         {
             // Master Code goes here
