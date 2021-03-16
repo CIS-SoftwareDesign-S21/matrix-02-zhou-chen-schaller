@@ -80,12 +80,13 @@ int main(int argc, char *argv[])
 		}
 		fclose(fp);
 	
+		aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
+		bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
+		aa = read_matrix_from_file(argv[1]);
+		bb = read_matrix_from_file(argv[2]);
+
 		if (myid == master)
 		{
-			aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
-			bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
-			aa = read_matrix_from_file(argv[1]);
-			bb = read_matrix_from_file(argv[2]);
 			cc1 = malloc(sizeof(double) * nrows_1 * ncols_2);
         	buffer = (double *)malloc(sizeof(double) * ncols_2);
         	ans = (double *)malloc(sizeof(double) * ncols_2);
