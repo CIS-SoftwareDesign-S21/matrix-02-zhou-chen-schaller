@@ -134,6 +134,9 @@ int main(int argc, char *argv[])
 			/* Insert your master code here to store the product into cc1 */
 			mmult(cc2, aa, nrows_1, ncols_1, bb, nrows_2, ncols_2);
 
+			print_matrix(aa, nrows_1, ncols_1);
+			print_matrix(bb, nrows_2, ncols_2);
+
 			if (compare_matrices(cc2, cc1, nrows_1, ncols_2))
 			{
 				fp = fopen("resultant_matrix.txt", "w");
