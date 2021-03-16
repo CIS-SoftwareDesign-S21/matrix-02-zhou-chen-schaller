@@ -15,8 +15,9 @@ int main(int argc, char *argv[])
 {
     int nrows, ncols;
 
-    double *aa, *b, *c;
-    double *buffer, ans;
+    double *aa, *bb, *c;
+    double *buffer;
+    double *ans;
     double *times;
     double total_times;
 
@@ -40,18 +41,19 @@ int main(int argc, char *argv[])
         nrows = atoi(argv[1]);
         ncols = nrows;
         aa = (double *)malloc(sizeof(double) * nrows * ncols);
-        b = (double *)malloc(sizeof(double) * ncols);
+        bb = (double *)malloc(sizeof(double) * nrows * ncols); // refactor to become full matrix
         c = (double *)malloc(sizeof(double) * nrows);
         buffer = (double *)malloc(sizeof(double) * ncols);
+        ans = (double *)malloc(sizeof(double) * ncols); // allocate space for buffer row
         master = 0;
         if (myid == master)
         {
             // Master Code goes here
             aa = gen_matrix(nrows, ncols);
-            b = gen_matrix(nrows, ncols);
+            bb = gen_matrix(nrows, ncols); // added this to randomly generate bb as matrix
             starttime = MPI_Wtime();
             numsent = 0;
-            MPI_Bcast(b, ncols, MPI_DOUBLE, master, MPI_COMM_WORLD);
+            MPI_Bcast(bb, ncols, MPI_DOUBLE, master, MPI_COMM_WORLD);
             for (i = 0; i < min(numprocs - 1, nrows); i++)
             {
                 for (j = 0; j < ncols; j++)
@@ -63,11 +65,15 @@ int main(int argc, char *argv[])
             }
             for (i = 0; i < nrows; i++)
             {
-                MPI_Recv(&ans, 1, MPI_DOUBLE, MPI_ANY_SOURCE, MPI_ANY_TAG,
+                MPI_Recv(ans, 1, MPI_DOUBLE, MPI_ANY_SOURCE, MPI_ANY_TAG,
                          MPI_COMM_WORLD, &status);
                 sender = status.MPI_SOURCE;
                 anstype = status.MPI_TAG;
-                c[anstype - 1] = ans;
+                // putting buffer row into c
+                for (int k = 0; k < ncols; k++) {
+                    int m = (anstype - 1) * ncols + k;
+                    c[m] = ans[k];
+                }
                 if (numsent < nrows)
                 {
                     for (j = 0; j < ncols; j++)
@@ -89,7 +95,7 @@ int main(int argc, char *argv[])
         else
         {
             // Slave Code goes here
-            MPI_Bcast(b, ncols, MPI_DOUBLE, master, MPI_COMM_WORLD);
+            MPI_Bcast(bb, ncols, MPI_DOUBLE, master, MPI_COMM_WORLD);
             if (myid <= nrows)
             {
                 while (1)
@@ -105,10 +111,10 @@ int main(int argc, char *argv[])
                     for (int i = 0; i < ncols; i++) {
                         ans[i] = 0.0;
                     }
-                    // calculate row buffer * matrix b here and put into row result
+                    // calculate row buffer * matrix bb here and put into row result
                     for (int k = 0; k < ncols; k++) {
                         for (j = 0; j < ncols; j++) {
-                            ans[k] += buffer[j] * b[j * ncols + k];
+                            ans[k] += buffer[j] * bb[j * ncols + k];
                         }
                     }
                     // send the row result back to master
