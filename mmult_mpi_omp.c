@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
                     {
                         for (j = 0; j < ncols_2; j++)
                         {
-                            ans[k] += buffer[j] * bb[j * ncols_2 + k];
+                            ans[k] += buffer[j] * bb[k * ncols_2 + j];
                         }
                     }
 					MPI_Send(ans, ncols_2, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
