@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
 	MPI_Status status;
 	int i, j, numsent, sender;
 	int anstype, row;
-	
 
 	/* insert other global variables here */
 	size_t buflen = 255;
@@ -58,7 +57,6 @@ int main(int argc, char *argv[])
 			exit(EXIT_FAILURE);
 		}
 		fclose(fp);
-		
 
 		// 2nd matrix
 		fp = fopen(argv[2], "r");
@@ -79,7 +77,7 @@ int main(int argc, char *argv[])
 			exit(EXIT_FAILURE);
 		}
 		fclose(fp);
-	
+
 		aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
 		bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
 		aa = read_matrix_from_file(argv[1]);
@@ -111,10 +109,10 @@ int main(int argc, char *argv[])
 				sender = status.MPI_SOURCE;
 				anstype = status.MPI_TAG;
 				for (int k = 0; k < ncols_2; k++)
-                {
-                    int m = (anstype - 1) * ncols_2 + k;
-                    cc1[m] = ans[k];
-                }
+				{
+					int m = (anstype - 1) * ncols_2 + k;
+					cc1[m] = ans[k];
+				}
 				if (numsent < nrows_1)
 				{
 					for (j = 0; j < ncols_2; j++)
@@ -150,45 +148,46 @@ int main(int argc, char *argv[])
 				}
 				fclose(fp);
 			}
-		else
-		{
-			// Slave Code goes here
-			MPI_Bcast(bb, ncols_2, MPI_DOUBLE, master, MPI_COMM_WORLD);
-			if (myid <= nrows_1)
+			else
 			{
-				while (1)
+				// Slave Code goes here
+				MPI_Bcast(bb, ncols_2, MPI_DOUBLE, master, MPI_COMM_WORLD);
+				if (myid <= nrows_1)
 				{
-					MPI_Recv(buffer, ncols_2, MPI_DOUBLE, master, MPI_ANY_TAG,
-							 MPI_COMM_WORLD, &status);
-					if (status.MPI_TAG == 0)
+					while (1)
 					{
-						break;
-					}
-					row = status.MPI_TAG;
-					// initalize result row ans
-                    for (int i = 0; i < ncols_2; i++)
-                    {
-                        ans[i] = 0.0;
-                    }
+						MPI_Recv(buffer, ncols_2, MPI_DOUBLE, master, MPI_ANY_TAG,
+								 MPI_COMM_WORLD, &status);
+						if (status.MPI_TAG == 0)
+						{
+							break;
+						}
+						row = status.MPI_TAG;
+						// initalize result row ans
+						for (int i = 0; i < ncols_2; i++)
+						{
+							ans[i] = 0.0;
+						}
 #pragma omp parallel
-#pragma omp shared(ans) for reduction(+:ans)
-					// calculate row buffer * matrix bb here and put into row result
-                    for (int k = 0; k < ncols_2; k++)
-                    {
-                        for (j = 0; j < ncols_2; j++)
-                        {
-                            ans[k] += buffer[j] * bb[j * ncols_2 + k];
-                        }
-                    }
-					MPI_Send(ans, ncols_2, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
+#pragma omp shared(ans) for reduction(+ : ans)
+						// calculate row buffer * matrix bb here and put into row result
+						for (int k = 0; k < ncols_2; k++)
+						{
+							for (j = 0; j < ncols_2; j++)
+							{
+								ans[k] += buffer[j] * bb[j * ncols_2 + k];
+							}
+						}
+						MPI_Send(ans, ncols_2, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
+					}
 				}
 			}
 		}
+		else
+		{
+			fprintf(stderr, "Usage mmult_mpi_omp <file> <file>\n");
+		}
+		MPI_Finalize();
+		return 0;
 	}
-	else
-	{
-		fprintf(stderr, "Usage mmult_mpi_omp <file> <file>\n");
-	}
-	MPI_Finalize();
-	return 0;
 }
