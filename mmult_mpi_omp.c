@@ -145,9 +145,9 @@ int main(int argc, char *argv[])
 				{
 					for (int j = 0; j < nrows_1; j++)
 					{
-						fprintf(fp, "%5lf \n", cc1[ncols_2 * i + j]);
+						fprintf(fp, "%5lf ", cc1[ncols_2 * i + j]);
 					}
-					puts("");
+					fprintf(fp, "\n");
 				}
 				fclose(fp);
 			}
