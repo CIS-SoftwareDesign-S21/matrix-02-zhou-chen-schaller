@@ -65,10 +65,10 @@ int main(int argc, char *argv[])
             }
             for (i = 0; i < nrows; i++)
             {
-                MPI_Recv(ans, 1, MPI_DOUBLE, MPI_ANY_SOURCE, MPI_ANY_TAG,
+                MPI_Recv(ans, nrows, MPI_DOUBLE, MPI_ANY_SOURCE, MPI_ANY_TAG,
                          MPI_COMM_WORLD, &status);
                 sender = status.MPI_SOURCE;
-                anstype = status.MPI_TAG;
+                anstype = status.MPI_TAG; // number of row passed to slave code
                 // putting buffer row into c
                 for (int k = 0; k < ncols; k++) {
                     int m = (anstype - 1) * ncols + k;
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
                         break;
                     }
                     row = status.MPI_TAG;
-                    // initalize row buffer
+                    // initalize result row ans
                     for (int i = 0; i < ncols; i++) {
                         ans[i] = 0.0;
                     }
