@@ -14,8 +14,6 @@ OMP (OpenMP) is an API that supports multi-platform shared-memory multiprocessin
 MPI (Message Passing Interface) a standardized message-passing system used to communicate between several computers that are separate but linked, also referred to as a cluster. This implements the distributed memory type of parallel computing, and the standard defines the syntax and semantics for a set of API declarations, such as send, receive, broadcast for message-passing, as well as their expected behaviors. MPI was designed for high performance on massively parallel machines and on workstation clusters, and is widely available for free and in vendor-supplied implementations.
 
 ### Our Solution
-* TODO: add a part talking about with/without -O3 when running main (probably in paragraph below)
-
 We created four separate files (mmult, mmult_simd, mmult_omp, mmult_mpi) that define matrix multiplication functions using the different parallel computing approaches explained above. Our main program (`make mmult_main`) implements a basic user command-line interface for testing and timing the running times of these different algorithms when multiplying random matrices of sizes (100, 200, 300, ..., 1000). It generates tabular data from timing in a respective .txt file using the following format:
 ```
 100 0.005419
