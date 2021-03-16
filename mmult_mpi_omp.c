@@ -181,6 +181,9 @@ int main(int argc, char *argv[])
                         for (j = 0; j < ncols_2; j++)
                         {
                             ans[k] += buffer[j] * bb[j * ncols_2 + k];
+				printf("\nans[%d] = %lf * %lf", i, aa[i*ncols + j], bb[j*ncols + k]);
+				printf("\nrow = %d", i);
+				printf("\ni*ncols + j = %d, j*ncols + k = %d", i*ncols +j, j*ncols +k);
                         }
                     }
 					MPI_Send(ans, ncols_2, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
