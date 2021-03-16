@@ -15,7 +15,7 @@ MPI (Message Passing Interface) a standardized message-passing system used to co
 
 ### Our Solution
 * TODO: add a part talking about with/without -O3 when running main (probably in paragraph below)
-* 
+
 We created four separate files (mmult, mmult_simd, mmult_omp, mmult_mpi) that define matrix multiplication functions using the different parallel computing approaches explained above. Our main program (`make mmult_main`) implements a basic user command-line interface for testing and timing the running times of these different algorithms when multiplying random matrices of sizes (100, 200, 300, ..., 1000). It generates tabular data from timing in a respective .txt file using the following format:
 ```
 100 0.005419
@@ -74,13 +74,6 @@ We used a [Trello Board](https://trello.com/b/20iU4Cqc/02-zhou-chen-schaller) to
 
 Our general development cycle was to write code locally, and then upload it to the Wolfgang cluster to compile, run, and test, committing changes after ensuring that they ran correctly on the cluster by testing manually. We ensured the validity of our multiplication algorithms by comparing the results they produced with the results of the unoptimized single-threaded multiplication. The program that multiplies matrix data from two .txt files and writes the resulitng matrix in c.txt helped us manually check this. Our main program data collection combined with the graph visualization also acted as additional confirmation for our algorithms (we would expect each line to look like quadratic complexity, and we would expect our newer and more effective algorithms like MPI to perform significantly better).
 
-To generate the random matrices, we used the gen_matrix(n, m) function provided in mat.h.
+We planned to utilize some of the provided functions from mat.h in our code (we used the gen_matrix(n, m) to generate random matrices of specific sizes), but this also turned out to be problematic at times. For example, when reading matrices from files for mmult_mpi_omp, we used the read_matrix_from_file(path) function as suggested, but found that the associated read_size_from_file(path) function was no longer provided in mat.c. We also ran into some problems in our initial main program trying to utilize mat.c's deltaTime(start, end) function. These problems were resolved by making some changes when compiling and in the MakeFile.
 
-In the end, our team likely spent around 2/3 of its time writing code for the matrix multiplication algorithms and 1/3 of its time running, testing, and reporting.
-
-What kind of testing did you plan to use for this project? Did you consider measuring speed, memory consumption and validity of results for matrix multiplication. Did you consider that the code provided by the professor could have flaws?
-    Did you need to write code or use tools to generate random matrix of specific sizes? Did you put this in your plan? 
-    Did you put in your plan the work needed to generate tables or graphs? Did you automate this work?  
-    What proportion of the tasks (and time) in your plan is  about writing variations on the matrix multiplication algorithm and what proportion is about testing and reporting activities?
-
-* Include all tables, graphs and explanations needed to understand your work in the README.md file. No new or supplemental information should need to be communicated during the demo to grade your work.
+We also allocated time for generating graphs, and later automating this process during Week 2. In the end, our team likely spent around 2/3 of its time writing code for the matrix multiplication algorithms and 1/3 of its time running, testing, reporting, and preparing write-up materials.
