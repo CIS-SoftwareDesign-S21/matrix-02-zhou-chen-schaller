@@ -2,7 +2,7 @@
 # set terminal svg size 400,300 enhanced fname 'arial'  fsize 10 butt solid
 # set output 'out.svg'
 set terminal png size 800,600
-set output 'out.png'
+set output 'graph.png'
 
 
 # Key means label...
