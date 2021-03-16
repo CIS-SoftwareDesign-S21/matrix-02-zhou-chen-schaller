@@ -83,8 +83,8 @@ int main(int argc, char *argv[])
 			aa = read_matrix_from_file(argv[1]);
 			bb = read_matrix_from_file(argv[2]);
 			cc1 = malloc(sizeof(double) * nrows_1 * ncols_2);
-        	buffer = (double *)malloc(sizeof(double) * ncols);
-        	ans = (double *)malloc(sizeof(double) * ncols);
+        	buffer = (double *)malloc(sizeof(double) * ncols_2);
+        	ans = (double *)malloc(sizeof(double) * ncols_2);
 			/* Insert your master code here to store the product into cc1 */
 			starttime = MPI_Wtime();
 			numsent = 0;
