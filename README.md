@@ -35,6 +35,8 @@ Our solution also includes the mmult_mpi_omp program for multiplication using bo
 ```
 The program then writes the result to c.txt and verifies that the result is correct by using the single-threaded matrix multiplication algorithm on the two matrices and comparing the results.
 
+These graphs demonstrate the performance comparison of the different parallel computing approaches for matrix multiplication:
+
 ![Week 1 Graph](graph1.png)
 
 ![Week 2 Graph](graph2.png)
