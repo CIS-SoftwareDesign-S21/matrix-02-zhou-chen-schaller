@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 					{
 						buffer[j] = aa[numsent * ncols_2 + j];
 					}
-					MPI_Send(buffer, ncols_2, MPI_DOUBLE, sender, numsent + 1,
+					MPI_Send(aa, ncols_2, MPI_DOUBLE, sender, numsent + 1,
 							 MPI_COMM_WORLD);
 					numsent++;
 				}
@@ -168,14 +168,14 @@ int main(int argc, char *argv[])
 						break;
 					}
 					row = status.MPI_TAG;
+#pragma omp parallel
+#pragma omp shared(ans) for reduction(+ : ans)
 					// initalize result row ans
 					for (int i = 0; i < ncols_2; i++)
 					{
 						ans[i] = 0.0;
 					}
 					int i = row - 1;
-#pragma omp parallel
-#pragma omp shared(ans) for reduction(+ : ans)
 					// calculate row buffer * matrix bb here and put into row result
 					for (int k = 0; k < ncols_2; k++)
 					{
