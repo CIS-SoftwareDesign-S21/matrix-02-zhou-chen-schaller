@@ -7,8 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <string.h>
 #include "mat.h"
+#include <string.h>
+
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
 int main(int argc, char *argv[])
@@ -16,9 +17,9 @@ int main(int argc, char *argv[])
     int nrows, ncols;
 
     double *aa, *bb, *c;
-    double *buffer;
     double *ans;
     double *times;
+    double *buffer;
     double total_times;
 
     int run_index;
@@ -41,16 +42,16 @@ int main(int argc, char *argv[])
         nrows = atoi(argv[1]);
         ncols = nrows;
         aa = (double *)malloc(sizeof(double) * nrows * ncols);
-        bb = (double *)malloc(sizeof(double) * nrows * ncols); // refactor to become full matrix
-        c = (double *)malloc(sizeof(double) * nrows);
+        bb = (double *)malloc(sizeof(double) * nrows * ncols);
+        aa = gen_matrix(nrows, ncols);
+        bb = gen_matrix(nrows, ncols);
+        c = (double *)malloc(sizeof(double) * nrows * ncols);
         buffer = (double *)malloc(sizeof(double) * ncols);
-        ans = (double *)malloc(sizeof(double) * ncols); // allocate space for buffer row
+        ans = (double *)malloc(sizeof(double) * ncols);
         master = 0;
         if (myid == master)
         {
             // Master Code goes here
-            aa = gen_matrix(nrows, ncols);
-            bb = gen_matrix(nrows, ncols); // added this to randomly generate bb as matrix
             starttime = MPI_Wtime();
             numsent = 0;
             MPI_Bcast(bb, ncols, MPI_DOUBLE, master, MPI_COMM_WORLD);
@@ -66,13 +67,13 @@ int main(int argc, char *argv[])
             for (i = 0; i < nrows; i++)
             {
                 MPI_Recv(ans, nrows, MPI_DOUBLE, MPI_ANY_SOURCE, MPI_ANY_TAG,
-                         MPI_COMM_WORLD, &status);
+                         MPI_COMM_WORLD, &status); 
                 sender = status.MPI_SOURCE;
-                anstype = status.MPI_TAG; // number of row passed to slave code
-                // putting buffer row into c
-                for (int k = 0; k < ncols; k++) {
-                    int m = (anstype - 1) * ncols + k;
-                    c[m] = ans[k];
+                anstype = status.MPI_TAG;
+                for (int k = 0; k < ncols; k++)
+                {
+                    int in = (anstype - 1) * ncols + k;
+                    c[in] = ans[k];
                 }
                 if (numsent < nrows)
                 {
@@ -90,10 +91,12 @@ int main(int argc, char *argv[])
                 }
             }
             endtime = MPI_Wtime();
+			double finaltime = endtime - starttime;
             FILE* fp;
 			fp = fopen("mmult_mpi.txt", "a+");
-			fprintf(fp, "%d %f\n", atoi(argv[1]), (endtime - starttime));
+			fprintf(fp, "%d %lf\n", atoi(argv[1]), finaltime);
 			fclose(fp);
+			printf("\nsize: %d x %d\n", nrows, ncols);
         }
         else
         {
@@ -110,17 +113,17 @@ int main(int argc, char *argv[])
                         break;
                     }
                     row = status.MPI_TAG;
-                    // initalize result row ans
-                    for (int i = 0; i < ncols; i++) {
+                    for (int i = 0; i < ncols; i++)
+                    {
                         ans[i] = 0.0;
                     }
-                    // calculate row buffer * matrix bb here and put into row result
-                    for (int k = 0; k < ncols; k++) {
-                        for (j = 0; j < ncols; j++) {
+                    for (int k = 0; k < ncols; k++)
+                    {
+                        for (j = 0; j < ncols; j++)
+                        {
                             ans[k] += buffer[j] * bb[j * ncols + k];
                         }
                     }
-                    // send the row result back to master
                     MPI_Send(ans, ncols, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
                 }
             }
