@@ -93,7 +93,8 @@ double *read_matrix_from_file(const char *path) {
         do {
             matrix[n * i + j] = atof(nums);
             j++;
-        } while(nums == strtok(NULL, " "));
+            nums = strtok(NULL, " ");
+        } while(nums != NULL);
     }
 
     fclose(fp);
