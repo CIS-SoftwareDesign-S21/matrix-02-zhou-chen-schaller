@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
 	MPI_Status status;
 	int i, j, numsent, sender;
 	int anstype, row;
-	
 
 	/* insert other global variables here */
 	size_t buflen = 255;
@@ -58,7 +57,6 @@ int main(int argc, char *argv[])
 			exit(EXIT_FAILURE);
 		}
 		fclose(fp);
-		
 
 		// 2nd matrix
 		fp = fopen(argv[2], "r");
@@ -79,7 +77,7 @@ int main(int argc, char *argv[])
 			exit(EXIT_FAILURE);
 		}
 		fclose(fp);
-	
+
 		aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
 		bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
 		aa = read_matrix_from_file(argv[1]);
@@ -112,10 +110,10 @@ int main(int argc, char *argv[])
 				sender = status.MPI_SOURCE;
 				anstype = status.MPI_TAG;
 				for (int k = 0; k < ncols_2; k++)
-                {
-                    int m = (anstype - 1) * ncols_2 + k;
-                    cc1[m] = ans[k];
-                }
+				{
+					int m = (anstype - 1) * ncols_2 + k;
+					cc1[m] = ans[k];
+				}
 				if (numsent < nrows_1)
 				{
 					for (j = 0; j < ncols_2; j++)
@@ -133,7 +131,7 @@ int main(int argc, char *argv[])
 			}
 			endtime = MPI_Wtime();
 			/* Insert your master code here to store the product into cc1 */
-			
+
 			mmult(cc2, aa, nrows_1, ncols_1, bb, nrows_2, ncols_2);
 
 			print_matrix(cc1, nrows_1, ncols_1);
@@ -171,21 +169,21 @@ int main(int argc, char *argv[])
 					}
 					row = status.MPI_TAG;
 					// initalize result row ans
-                    for (int i = 0; i < ncols_2; i++)
-                    {
-                        ans[i] = 0.0;
-                    }
-#pragma omp parallel
-#pragma omp shared(ans) for reduction(+:ans)
+					for (int i = 0; i < ncols_2; i++)
+					{
+						ans[i] = 0.0;
+					}
 					int i = row - 1;
+#pragma omp parallel
+#pragma omp shared(ans) for reduction(+ : ans)
 					// calculate row buffer * matrix bb here and put into row result
-                    for (int k = 0; k < ncols_2; k++)
-                    {
-                        for (j = 0; j < nrows_1; j++)
-                        {
-                            ans[k] += aa[i * ncols_2 + j] * bb[j * ncols_2 + k];
-                        }
-                    }
+					for (int k = 0; k < ncols_2; k++)
+					{
+						for (j = 0; j < nrows_1; j++)
+						{
+							ans[k] += aa[i * ncols_2 + j] * bb[j * ncols_2 + k];
+						}
+					}
 					MPI_Send(ans, ncols_2, MPI_DOUBLE, master, row, MPI_COMM_WORLD);
 				}
 			}
