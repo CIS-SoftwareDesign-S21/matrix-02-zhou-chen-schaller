@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
 #include "mat.h"
+#include <string.h>
 
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
@@ -91,7 +91,12 @@ int main(int argc, char *argv[])
                 }
             }
             endtime = MPI_Wtime();
-            printf("%f\n", (endtime - starttime));
+			double finaltime = endtime - starttime;
+            FILE* fp;
+			fp = fopen("mmult_mpi.txt", "a+");
+			fprintf(fp, "%d %lf\n", atoi(argv[1]), finaltime);
+			fclose(fp);
+			printf("\nsize: %d x %d", nrows, ncols);
         }
         else
         {
