@@ -80,6 +80,10 @@ int main(int argc, char *argv[])
 		}
 		fclose(fp);
 	
+		printf("%d", &nrows_1);
+		printf("%d", &nrows_2);
+		printf("%d", &ncols_1);
+		printf("%d", &ncols_2);
 		aa = (double *)malloc(sizeof(double) * nrows_1 * ncols_1);
 		bb = (double *)malloc(sizeof(double) * nrows_2 * ncols_2);
 		aa = read_matrix_from_file(argv[1]);
