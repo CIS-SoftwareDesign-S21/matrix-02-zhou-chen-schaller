@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		fprintf(stderr, "Usage mmult_mpi_omp <file> <file>\n");
+		fprintf(stderr, "Usage mmult_mpi_omp_rand <size>\n");
 	}
 	MPI_Finalize();
 	return 0;
