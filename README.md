@@ -41,6 +41,8 @@ These graphs demonstrate the performance comparison of the different parallel co
 
 ![Week 2 Graph](graph2.png)
 
+![Week 3 Graph](graph3.png)
+
 ## Teamwork
 We locked the master branch and pushed our work to branches so that we could review and approve each other's work before merging it into master. You can also find the contributions of each team member on our project board linked in the Project Life Cycle section.
 
@@ -48,9 +50,11 @@ We locked the master branch and pushed our work to branches so that we could rev
 * Week 1
   * Completed the first iteration of the main testing program, generating data in tabular format for graph production for the unoptimized mmult and SIMD mmult with and without -O3 optimization
 * Week 2
+  * Refactored code to prompt user to continuously select from a menu to automate matrix multiplications with different optimizations
   * Implemented OpenMP & MPI algorithms into main for testing and data generation
   * Modified mmult_mpi_omp.c to multiply matrices created from data from txt files provided via command line arguments, writing the resulting matrix to c.txt and verifying the result using single-threaded multiplication
-  
+* Week 3
+  * Finalized the README
 
 ### Darren Chen
 * Week 1
@@ -59,6 +63,9 @@ We locked the master branch and pushed our work to branches so that we could rev
 * Week 2
   * Wrote code for MPI multiplication
   * Modified mmult_mpi_omp.c to multiply matrices using both MPI to distribute the computation among nodes and OMP to distribute the computation among threads
+* Week 3
+  * Updated Trello Board with the remaining additional tasks
+  * Refactored the 'MPI with OMP' code into the main program to run on randomly generated matrices and record data
 
 ### Karl Schaller
 * Week 1
@@ -70,12 +77,14 @@ We locked the master branch and pushed our work to branches so that we could rev
   * Tracked progress, keeping the Trello Board up to date and detailed for the week
   * Automated graph generation using gnuplot
   * Completed all writing in README (excluding additional tasks)
+* Week 3
+  * Updated graph with 'MPI with OMP' data
 
 ## Full Project Life Cycle
 We used a [Trello Board](https://trello.com/b/20iU4Cqc/02-zhou-chen-schaller) to plan and manage our project and teamwork throughout the project life cycle. At the beginning of each week, we planned out the tasks we needed to accomplish, using checklists to break down the more complicated tasks and allocating tasks among team members.
 
-Our general development cycle was to write code locally, and then upload it to the Wolfgang cluster to compile, run, and test, committing changes after ensuring that they ran correctly on the cluster by testing manually. We ensured the validity of our multiplication algorithms by comparing the results they produced with the results of the unoptimized single-threaded multiplication. The program that multiplies matrix data from two .txt files and writes the resulitng matrix in c.txt helped us manually check this. Our main program data collection combined with the graph visualization also acted as additional confirmation for our algorithms (we would expect each line to look like quadratic complexity, and we would expect our newer and more effective algorithms like MPI to perform significantly better).
+Our general development cycle was to write code locally, and then upload it to the Wolfgang cluster to compile, run, and test, committing changes after ensuring that they ran correctly on the cluster by testing manually. We ensured the validity of our multiplication algorithms by comparing the results they produced with the results of the unoptimized single-threaded multiplication. The program that multiplies matrix data from two .txt files and writes the resulting matrix in c.txt helped us manually check this. Our main program data collection combined with the graph visualization also acted as additional confirmation for our algorithms (we would expect each line to look like quadratic complexity, and we would expect our newer and more effective algorithms like MPI to perform significantly better).
 
-We planned to utilize some of the provided functions from mat.h in our code (we used the gen_matrix(n, m) to generate random matrices of specific sizes), but this also turned out to be problematic at times. For example, when reading matrices from files for mmult_mpi_omp, we used the read_matrix_from_file(path) function as suggested, but found that the associated read_size_from_file(path) function was no longer provided in mat.c. We also ran into some problems in our initial main program trying to utilize mat.c's deltaTime(start, end) function. These problems were resolved by making some changes when compiling and in the MakeFile.
+We planned to utilize some of the provided functions from mat.h in our code (we used the gen_matrix(n, m) to generate random matrices of specific sizes), but this also turned out to be problematic at times. For example, when reading matrices from files for mmult_mpi_omp, we used the read_matrix_from_file(path) function as suggested but found that the associated read_size_from_file(path) function was no longer provided in mat.c. We also ran into some problems in our initial main program trying to utilize mat.c's deltaTime(start, end) function. These problems were resolved by making some changes when compiling and in the MakeFile.
 
 We also allocated time for generating graphs, and later automating this process during Week 2. In the end, our team likely spent around 2/3 of its time writing code for the matrix multiplication algorithms and 1/3 of its time running, testing, reporting, and preparing write-up materials.
