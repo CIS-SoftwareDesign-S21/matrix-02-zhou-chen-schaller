@@ -41,6 +41,8 @@ These graphs demonstrate the performance comparison of the different parallel co
 
 ![Week 2 Graph](graph2.png)
 
+![Week 3 Graph](graph3.png)
+
 ## Teamwork
 We locked the master branch and pushed our work to branches so that we could review and approve each other's work before merging it into master. You can also find the contributions of each team member on our project board linked in the Project Life Cycle section.
 
@@ -50,7 +52,8 @@ We locked the master branch and pushed our work to branches so that we could rev
 * Week 2
   * Implemented OpenMP & MPI algorithms into main for testing and data generation
   * Modified mmult_mpi_omp.c to multiply matrices created from data from txt files provided via command line arguments, writing the resulting matrix to c.txt and verifying the result using single-threaded multiplication
-  
+* Week 3
+  * Finalized the README
 
 ### Darren Chen
 * Week 1
@@ -59,6 +62,9 @@ We locked the master branch and pushed our work to branches so that we could rev
 * Week 2
   * Wrote code for MPI multiplication
   * Modified mmult_mpi_omp.c to multiply matrices using both MPI to distribute the computation among nodes and OMP to distribute the computation among threads
+* Week 3
+  * Updated Trello Board with the remaining additional tasks
+  * Refactored the 'MPI with OMP' code into the main program to run on randomly generated matrices and record data
 
 ### Karl Schaller
 * Week 1
@@ -70,6 +76,8 @@ We locked the master branch and pushed our work to branches so that we could rev
   * Tracked progress, keeping the Trello Board up to date and detailed for the week
   * Automated graph generation using gnuplot
   * Completed all writing in README (excluding additional tasks)
+* Week 3
+  * Updated graph with 'MPI with OMP' data
 
 ## Full Project Life Cycle
 We used a [Trello Board](https://trello.com/b/20iU4Cqc/02-zhou-chen-schaller) to plan and manage our project and teamwork throughout the project life cycle. At the beginning of each week, we planned out the tasks we needed to accomplish, using checklists to break down the more complicated tasks and allocating tasks among team members.
