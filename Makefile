@@ -1,6 +1,12 @@
-PGMS=mmult_omp_timing matrix_times_vector hello test_mmult mxv_omp_mpi mmult_mpi_omp mmult_main
+PGMS=mmult_omp_timing matrix_times_vector hello test_mmult mxv_omp_mpi mmult_mpi_omp mmult_mpi_omp_rand mmult_main
 
 all:	${PGMS}
+
+mmult_mpi_omp_rand:		mmult_mpi_omp_rand.o mat.c
+	mpicc -o mmult_mpi_omp_rand -fopenmp -O3 mmult_mpi_omp_rand.o mat.c
+
+mmult_mpi_omp_rand.o:	mmult_mpi_omp_rand.c
+	mpicc -c -fopenmp -O3 mmult_mpi_omp_rand.c
 
 mmult_mpi_omp:		mmult.o mmult_mpi_omp.o mat.c
 	mpicc -o mmult_mpi_omp -fopenmp -O3 mmult.o mmult_mpi_omp.o mat.c
